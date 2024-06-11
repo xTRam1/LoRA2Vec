@@ -9,7 +9,12 @@ from models import Label
 class RetrievalService:
     _EMBEDDING_MODEL = "mixedbread-ai/mxbai-embed-large-v1"
     _N_DIMENSION = 512
-    _EMBEDDING_PATH = "all_embeddings_torch.pkl"
+    _EMBEDDING__FILES = [
+        "embeddings/medical_data_embeddings.pt",
+        "embeddings/physics_data_embeddings.pt",
+        "embeddings/chemistry_data_embeddings.pt",
+        "embeddings/bio_data_embeddings.pt",
+    ]
     _LABELS_PATH = "labels.pkl"
 
     _embedding_model: SentenceTransformer
@@ -21,9 +26,13 @@ class RetrievalService:
             RetrievalService._EMBEDDING_MODEL,
             truncate_dim=RetrievalService._N_DIMENSION,
         )
-        with open(RetrievalService._EMBEDDING_PATH, "rb") as f:
-            # FIXME: Look at this torch.tensor thingy
-            self._all_embeddings = torch.tensor(pickle.load(f))
+
+        # Load all embeddings
+        embeddings = []
+        for file in RetrievalService._EMBEDDING__FILES:
+            embeddings.append(torch.load(file))
+        self._all_embeddings = torch.cat(embeddings)
+
         with open(RetrievalService._LABELS_PATH, "rb") as f:
             self._labels = pickle.load(f)
 
