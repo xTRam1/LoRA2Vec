@@ -15,6 +15,12 @@ class RetrievalService:
         "embeddings/chemistry_data_embeddings.pt",
         "embeddings/bio_data_embeddings.pt",
     ]
+    _CENTROID_FILES = [
+        "./centroids/centroids_bio.pt",
+        "./centroids/centroids_chemistry.pt",
+        "./centroids/centroids_medical.pt",
+        "./centroids/centroids_physics",
+    ]
     _LABELS_PATH = "labels.pkl"
 
     _embedding_model: SentenceTransformer
@@ -29,7 +35,7 @@ class RetrievalService:
 
         # Load all embeddings
         embeddings = []
-        for file in RetrievalService._EMBEDDING__FILES:
+        for file in RetrievalService._CENTROID_FILES:
             embeddings.append(torch.load(file))
         self._all_embeddings = torch.cat(embeddings)
 
