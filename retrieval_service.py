@@ -19,9 +19,10 @@ class RetrievalService:
         "./centroids/centroids_bio.pt",
         "./centroids/centroids_chemistry.pt",
         "./centroids/centroids_medical.pt",
-        "./centroids/centroids_physics",
+        "./centroids/centroids_physics.pt",
     ]
     _LABELS_PATH = "labels.pkl"
+    _LABELS_PATH_CENTROIDS = "./labels_centroids.pickle"
 
     _embedding_model: SentenceTransformer
     _all_embeddings: torch.Tensor
@@ -39,9 +40,9 @@ class RetrievalService:
             embeddings.append(torch.load(file))
         self._all_embeddings = torch.cat(embeddings)
 
-        with open(RetrievalService._LABELS_PATH, "rb") as f:
+        with open(RetrievalService._LABELS_PATH_CENTROIDS, "rb") as f:
             self._labels = pickle.load(f)
-
+            # self._labels = [0] * 10 + [1] * 10 + [2] * 10 + [3] * 10
     def retrieve_top_k_embeddings(self, query: str, top_k: int = 5) -> Label:
         """
         Computes the cosine similarity of each embedding to the query and retrieves the top_k most similar embeddings and their labels.
