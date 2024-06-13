@@ -19,7 +19,7 @@ class RetrievalService:
 
     _embedding_model: SentenceTransformer
     _all_embeddings: torch.Tensor
-    _labels: list
+    _labels: list[Label]
 
     def __init__(self) -> None:
         self._embedding_model = SentenceTransformer(
@@ -34,7 +34,7 @@ class RetrievalService:
         self._all_embeddings = torch.cat(embeddings)
 
         with open(RetrievalService._LABELS_PATH, "rb") as f:
-            self._labels = pickle.load(f)
+            self._labels = [Label(label) for label in pickle.load(f)]
 
     def retrieve_top_k_embeddings(self, query: str, top_k: int = 5) -> Label:
         """

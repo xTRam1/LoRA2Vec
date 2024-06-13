@@ -1,0 +1,6 @@
+{
+  "Physics": "open-mistral-7b",
+  "Chemistry": "open-mistral-7b",
+  "Medical": "open-mistral-7b",
+  "Biology": "open-mistral-7b"
+}

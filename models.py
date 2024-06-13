@@ -5,4 +5,4 @@ class Label(Enum):
     PHYSICS = "Physics"
     BIOLOGY = "Biology"
     CHEMISTRY = "Chemistry"
-    MATHEMATICS = "Mathematics"
+    MEDICAL = "Medical"
