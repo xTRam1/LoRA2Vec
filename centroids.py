@@ -43,7 +43,7 @@ def plot_tsne_centers_and_data(tensor, data, n_clusters=10):
     print(centroids_tsne.shape)
     print("TSNE end")
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(100, 80))
     plt.scatter(array_tsne[:, 0], array_tsne[:, 1], c='blue', alpha=0.5, label='Training Data')
     plt.scatter(centroids_tsne[:, 0], centroids_tsne[:, 1], c='red', marker='X', s=200, label='Centroids')
     plt.legend()
