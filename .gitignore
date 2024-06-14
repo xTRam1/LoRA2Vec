@@ -1,0 +1,5 @@
+/centroids
+/.idea
+/*.pickle
+/*.pkl
+/__pycache__

@@ -1,0 +1,5 @@
+mistralai==0.4.0
+sentence_transformers==3.0.1
+torch==2.2.2
+fastapi==0.111.0
+sse_starlette==2.1.0
