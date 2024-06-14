@@ -1,4 +1,5 @@
 import pickle
+from pathlib import Path
 
 import torch
 from sentence_transformers import SentenceTransformer
@@ -9,32 +10,30 @@ from models import Label
 class RetrievalService:
     _EMBEDDING_MODEL = "mixedbread-ai/mxbai-embed-large-v1"
     _N_DIMENSION = 512
-    _EMBEDDING__FILES = [
-        "embeddings/medical_data_embeddings.pt",
-        "embeddings/physics_data_embeddings.pt",
-        "embeddings/chemistry_data_embeddings.pt",
-        "embeddings/bio_data_embeddings.pt",
-    ]
-    _LABELS_PATH = "labels.pkl"
 
     _embedding_model: SentenceTransformer
     _all_embeddings: torch.Tensor
     _labels: list[Label]
 
-    def __init__(self) -> None:
+    def __init__(self, embeddings_dir: str) -> None:
         self._embedding_model = SentenceTransformer(
             RetrievalService._EMBEDDING_MODEL,
             truncate_dim=RetrievalService._N_DIMENSION,
         )
 
-        # Load all embeddings
-        embeddings = []
-        for file in RetrievalService._EMBEDDING__FILES:
-            embeddings.append(torch.load(file))
-        self._all_embeddings = torch.cat(embeddings)
-
-        with open(RetrievalService._LABELS_PATH, "rb") as f:
-            self._labels = [Label(label) for label in pickle.load(f)]
+        # Load all embeddings and labels
+        # Make sure that you have the order of the labels in the same order as the embeddings
+        labels = list(Label)
+        all_embeddings: dict[Label, torch.Tensor] = {
+            label: torch.load(
+                f"{embeddings_dir}/{label.value.lower()}_data_embeddings.pt"
+            )
+            for label in labels
+        }
+        self._all_embeddings = torch.cat(list(all_embeddings.values()))
+        self._labels = [
+            label for label in labels for _ in range(all_embeddings[label].shape[0])
+        ]
 
     def retrieve_top_k_embeddings(self, query: str, top_k: int = 5) -> Label:
         """
