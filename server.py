@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sse_starlette import EventSourceResponse
 
@@ -8,6 +9,16 @@ from retrieval_service import RetrievalService
 _EMBEDDINGS_DIR = "50_centroids"
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 retrieval_service = RetrievalService(embeddings_dir=_EMBEDDINGS_DIR)
 mistral_client = MistralAPIClient()
 
