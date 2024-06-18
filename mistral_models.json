@@ -1,6 +1,6 @@
 {
-  "Physics": "open-mistral-7b",
-  "Chemistry": "open-mistral-7b",
-  "Medical": "open-mistral-7b",
-  "Biology": "open-mistral-7b"
+  "Physics": "fe85a8ae-86bc-42f7-a41d-1c4af06b70ab",
+  "Chemistry": "060e9316-8916-4471-ae97-2721ab907205",
+  "Medical": "efbb1019-ba93-474e-b0a0-795096f7613e",
+  "Biology": "d5a15aa9-a281-4928-96b7-4c3df03146eb"
 }
