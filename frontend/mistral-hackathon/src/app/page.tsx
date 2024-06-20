@@ -1,138 +1,195 @@
 "use client";
-import styles from './page.module.css';  // Adjust the path according to your project structure
 
-// import { useState } from "react";
+// import bio from "@/assets/bio.jpg";
+// import physics from "@/assets/physics.jpeg";
+import { useEffect, useState } from "react";
+import { BiAtom } from "react-icons/bi";
+import { MdHealthAndSafety } from "react-icons/md";
+import { PiDna } from "react-icons/pi";
+import { SlChemistry } from "react-icons/sl";
+import styles from "./page.module.css";
 
-// const Home = () => {
-//   const [query, setQuery] = useState("");
-//   const [response, setResponse] = useState("");
-
-//   const handleSubmit = async (e: { preventDefault: () => void; }) => {
-//     e.preventDefault();
-//     // Clear previous response
-//     setResponse("");
-
-//     const url = "http://localhost:8000/generate";
-//     const headers = {
-//       "Content-Type": "application/json",
-//     };
-//     const data = { query };
-
-//     try {
-//       const res = await fetch(url, {
-//         method: "POST",
-//         headers,
-//         body: JSON.stringify(data),
-//       });
-
-//       if (res.ok) {
-//         const reader = res.body.getReader();
-//         const decoder = new TextDecoder("utf-8");
-//         let buffer = "";
-
-//         while (true) {
-//           const { done, value } = await reader.read();
-//           if (done) break;
-//           buffer += decoder.decode(value, { stream: true });
-
-//           const lines = buffer.split("\n");
-//           buffer = lines.pop(); // Keep the last partial line in buffer
-
-//           for (let line of lines) {
-//             if (line.trim() !== "") {
-//               if (line.startsWith("data: ")) {
-//                 const token = line.substring(6);
-//                 if (token === '{"done": true}') {
-//                   reader.cancel();
-//                   break;
-//                 }
-//                 setResponse((prevResponse) => prevResponse + token);
-//               }
-//             }
-//           }
-//         }
-//       } else {
-//         console.error("Failed to fetch data", res.status);
-//       }
-//     } catch (error) {
-//       console.error("Error fetching data", error);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h1>Call FastAPI Endpoint with SSE</h1>
-//       <form onSubmit={handleSubmit}>
-//         <input
-//           type="text"
-//           value={query}
-//           onChange={(e) => setQuery(e.target.value)}
-//           placeholder="Enter your query"
-//         />
-//         <button type="submit">Submit</button>
-//       </form>
-//       {response && (
-//         <div style={{ overflow: "auto" }}>
-//           <h2>Response:</h2>
-//           <pre>{response}</pre>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-
-import React, { useState } from 'react';
+interface Message {
+  id: number;
+  text: string; // assuming `text` is a string; adjust the type as necessary
+  sender: string;
+}
 
 const ChatbotUI = () => {
-    const [messages, setMessages] = useState([]);
-    const [userInput, setUserInput] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [userInput, setUserInput] = useState("");
+  const [label, setLabel] = useState("");
 
-    const handleUserInput = event => {
-        setUserInput(event.target.value);
+  useEffect(() => {
+    // Cleanup logic for messages if needed
+  }, []);
+
+  const handleUserInput = (event) => {
+    setUserInput(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const newMessage = {
+      id: messages.length + 1,
+      text: userInput,
+      sender: "user",
     };
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-    const handleSubmit = event => {
-        event.preventDefault();
-        const newMessage = { id: messages.length + 1, text: userInput, sender: "user" };
-        setMessages([...messages, newMessage]);
-        sendToChatbot(userInput);
-        setUserInput("");
-    };
+    const classifyResponse = await fetch("http://localhost:8000/classify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: userInput }),
+    });
+    const { label } = await classifyResponse.json();
+    setLabel(label);
 
-    const sendToChatbot = (input) => {
-        // Simulate chatbot response
-        setTimeout(() => {
-            const botResponse = { id: messages.length + 2, text: `Echo: ${input}`, sender: "bot" };
-            setMessages(messages => [...messages, botResponse]);
-        }, 500);
-    };
+    const data = { label, query: userInput };
+    streamResponse(data);
+    setUserInput("");
+  };
 
-    return (
-        <div className="chatbot-container">
-            <div className={styles.messagesList}>
-                {messages.map(message => (
-                    <div key={message.id} className={`message ${message.sender}`}>
-                        {message.text}
-                    </div>
-                ))}
-            </div>
-            <form onSubmit={handleSubmit}className={styles.inputForm}>
-                <input 
-                    type="text" 
-                    className={styles.textInput}
-                    value={userInput} 
-                    onChange={handleUserInput} 
-                    placeholder="Type your message ..." 
-                />
-                <button type="submit"
-                        className={styles.sendButton}>Send</button>
-            </form>
+  const streamResponse = async (data) => {
+    const url = "http://localhost:8000/generate";
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            id: prevMessages.length + 1,
+            text: buffer,
+            sender: "bot",
+          },
+        ]);
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+
+          const lines = buffer.split("\n");
+          buffer = lines.pop();
+
+          lines.forEach((line) => {
+            if (line.trim() !== "" && line.startsWith("data: ")) {
+              const token = line.substring(5);
+              if (token === '{"done": true}') {
+                reader.cancel();
+                return;
+              }
+              // Update the content of the single bot message
+              setMessages((prevMessages) => {
+                const updatedMessages = [...prevMessages];
+                const botMessageIndex = updatedMessages.findLastIndex(
+                  (m) => m.sender === "bot"
+                );
+                // Prevent duplication: only append if different from current text
+                if (!updatedMessages[botMessageIndex].text.endsWith(token)) {
+                  updatedMessages[botMessageIndex].text += token;
+                }
+                return updatedMessages;
+              });
+            }
+          });
+        }
+      } else {
+        console.error("Failed to fetch data", response.status);
+      }
+    } catch (error) {
+      console.error("Error fetching data", error);
+    }
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "left",
+          alignItems: "center",
+          flexDirection: "column",
+          margin: "auto",
+        }}
+      >
+        <SlChemistry
+          className={styles.loraLogo}
+          color={label == "Chemistry" ? "orange" : "grey"}
+        />
+        <BiAtom
+          className={styles.loraLogo}
+          color={label == "Physics" ? "blue" : "grey"}
+        />
+        <PiDna
+          className={styles.loraLogo}
+          color={label == "Biology" ? "green" : "grey"}
+        />
+        <MdHealthAndSafety
+          className={styles.loraLogo}
+          color={label == "Medical" ? "red" : "grey"}
+        />
+      </div>
+
+      <div
+        className="chatbot-container"
+        style={{
+          flexGrow: 1,
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
+        }}
+      >
+        <div
+          className={styles.messagesList}
+          style={{
+            overflow: "auto",
+            flexGrow: 1,
+            marginTop: "8vh",
+            fontSize: "1.5em",
+          }}
+        >
+          {messages.map((message) => (
+            <span
+              key={message.id}
+              className={
+                message.sender == "bot" ? styles.messageBot : styles.messageUser
+              }
+              style={{ columnSpan: "all" }}
+            >
+              {message.text}
+            </span>
+          ))}
         </div>
-    );
+        <form
+          onSubmit={handleSubmit}
+          className={styles.inputForm}
+          style={{ display: "flex", padding: "10px" }}
+        >
+          <input
+            type="text"
+            className={styles.textInput}
+            value={userInput}
+            onChange={handleUserInput}
+            placeholder="Type your message ..."
+            style={{ flexGrow: 1 }}
+          />
+          <button type="submit" className={styles.sendButton}>
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default ChatbotUI;
-
-
-
