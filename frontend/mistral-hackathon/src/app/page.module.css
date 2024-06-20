@@ -228,3 +228,75 @@
     transform: rotate(0deg);
   }
 }
+
+.chatbot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Centers horizontally */
+  justify-content: flex-end;  /* Aligns everything to the bottom */
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+
+.messagesList {
+  display: flex;
+  flex-direction: column;
+  width: 80%; /* Match the width of the inputForm */
+  flex: 1; /* Takes remaining space */
+  overflow-y: auto; /* Allows scrolling */
+  margin: auto; /* Centers horizontally */
+  margin-bottom: 20px; /* Space between messages and form */
+  padding: 10px 0; /* Padding for aesthetic spacing */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: adds shadow for better visibility */
+}
+
+
+
+.inputForm {
+  display: flex;
+  width: 80%; /* Or 100% depending on desired width */
+  justify-content: center; /* Centers the children horizontally within the form */
+  align-items: center; /* Optional if you need vertical alignment of internal elements */
+  margin: auto; /* This is key to centering the form horizontally */
+}
+
+
+.message {
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.message.user {
+  background-color: #e0f7fa;
+  text-align: left;
+}
+
+.message.bot {
+  background-color: #e1bee7;
+  text-align: left;
+}
+
+.textInput {
+  flex-grow: 1; /* Allows the input to expand to fill available space */
+  margin-right: 10px; /* Space between the input and the button */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.sendButton {
+  padding: 10px 20px;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.inputForm {
+  display: flex;
+}
+
