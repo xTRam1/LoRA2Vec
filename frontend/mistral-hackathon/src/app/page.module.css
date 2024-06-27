@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
 .main {
   display: flex;
   flex-direction: column;
@@ -286,16 +288,24 @@
   margin: 5px 5px;
   padding: 10px;
   border-radius: 10px;
-  background-color: #c7c4c4;
+  /* background-color: #DCDCDC; */
   text-align: right;
 }
 
 .messageBot {
   margin: 5px 5px;
+  margin-bottom: 20px;
   padding: 10px;
   border-radius: 10px;
-  background-color: #ffffff;
+  /* background-color: #DCDCDC; */
   text-align: left;
+}
+
+.raleway-style {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* Example: 400 for normal weight, 700 for bold, etc. */
+  font-style: normal;
 }
 
 .textInput {
