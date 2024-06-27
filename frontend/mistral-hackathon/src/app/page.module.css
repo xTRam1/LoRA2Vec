@@ -229,6 +229,24 @@
   }
 }
 
+
+
+@keyframes gradientBackground {
+  0%, 100% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  25%, 75% {
+      background-position: 50% 100%;
+  }
+}
+
+
+
+
+
 .chatbot-container {
   display: flex;
   flex-direction: column;
@@ -293,9 +311,8 @@
 
 .sendButton {
   padding: 10px 20px;
-  background-color: blue;
-  color: white;
   border: none;
+  color: white;
   height: 8vh;
   width: 10vh;
   font-size: large;

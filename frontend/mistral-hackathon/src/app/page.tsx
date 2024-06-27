@@ -15,10 +15,48 @@ interface Message {
   sender: string;
 }
 
+type ColorMapping = {
+  [key: string]: [string, string]; 
+};
+
+type buttonColorMapping = {
+  [key: string]: string
+}
+
 const ChatbotUI = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userInput, setUserInput] = useState("");
   const [label, setLabel] = useState("");
+  const colorMappings: ColorMapping= {
+    Chemistry: ['#FF8C00', '#FFDEAD'], // Example gradient for Chemistry
+    Physics: ['#0000CD', '#F0F8FF'],    // Example gradient for Physics
+    Biology: ['#006400', '#F5FFFA'],    // Example gradient for Biology
+    Medical: ['#8B0000', '#FFE4E1']     // Example gradient for Medical
+  };
+
+  const buttonColorMapping: buttonColorMapping = { 
+    Chemistry: "orange", // Example gradient for Chemistry
+    Physics: "blue",    // Example gradient for Physics
+    Biology: "#008000",    // Example gradient for Biology
+    Medical: "red"  
+  }
+
+  const buttonColor = buttonColorMapping[label] || 'grey'
+
+    // Retrieve the appropriate colors based on the label
+    const colors = colorMappings[label] || ['#ffffff', '#cccccc']; // Default colors if label is undefined
+  
+    // Style object for gradient
+    const gradientStyle = {
+      background: `linear-gradient(-45deg, ${colors[0]}, ${colors[1]})`,
+      backgroundSize: '100% 100%',
+      animation: 'gradientBackground 8s infinite ',
+      height: '100vh', // Full viewport height
+      width: '100vw',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    };
 
   useEffect(() => {
     // Cleanup logic for messages if needed
@@ -27,6 +65,7 @@ const ChatbotUI = () => {
   const handleUserInput = (event) => {
     setUserInput(event.target.value);
   };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -112,7 +151,7 @@ const ChatbotUI = () => {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+    <div  style={gradientStyle}>
       <div
         style={{
           display: "flex",
@@ -183,7 +222,9 @@ const ChatbotUI = () => {
             placeholder="Type your message ..."
             style={{ flexGrow: 1 }}
           />
-          <button type="submit" className={styles.sendButton}>
+          <button type="submit" className={styles.sendButton}
+          style={{ backgroundColor: buttonColor }}
+           >
             Send
           </button>
         </form>
