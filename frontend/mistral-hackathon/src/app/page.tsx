@@ -115,13 +115,19 @@ const ChatbotUI = () => {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          buffer += decoder.decode(value, { stream: true });
+          // buffer += decoder.decode(value, { stream: true });
+          buffer += decoder.decode(value);
+
 
           const lines = buffer.split("\n");
-          buffer = lines.pop();
+          // const parsedLines = lines.map((line) => line.replace(/^data: /, ""))
+          const parsedLines = lines.map(line => line.replace(/\r/g, '').replace(/^data: /, ''));
+          buffer = parsedLines.pop();
+          conso
 
           lines.forEach((line) => {
             if (line.trim() !== "" && line.startsWith("data: ")) {
+
               const token = line.substring(5);
               if (token === '{"done": true}') {
                 reader.cancel();
