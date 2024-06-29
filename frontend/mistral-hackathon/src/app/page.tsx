@@ -123,16 +123,16 @@ const ChatbotUI = () => {
           // const parsedLines = lines.map((line) => line.replace(/^data: /, ""))
           const parsedLines = lines.map(line => line.replace(/\r/g, '').replace(/^data: /, ''));
           buffer = parsedLines.pop();
-          conso
+          
+          parsedLines.forEach((line) => {
+            if (line !== "") {
+              // const token = line.substring(5); 
+              console.log(line)
 
-          lines.forEach((line) => {
-            if (line.trim() !== "" && line.startsWith("data: ")) {
-
-              const token = line.substring(5);
-              if (token === '{"done": true}') {
-                reader.cancel();
-                return;
-              }
+              // if (token === '{"done": true}') {
+              //   reader.cancel(); // Cancel the reader if the token indicates done
+              //   return;
+              // }
               // Update the content of the single bot message
               setMessages((prevMessages) => {
                 const updatedMessages = [...prevMessages];
@@ -140,8 +140,8 @@ const ChatbotUI = () => {
                   (m) => m.sender === "bot"
                 );
                 // Prevent duplication: only append if different from current text
-                if (!updatedMessages[botMessageIndex].text.endsWith(token)) {
-                  updatedMessages[botMessageIndex].text += token;
+                if (botMessageIndex !== -1 && !updatedMessages[botMessageIndex].text.endsWith(line)) {
+                  updatedMessages[botMessageIndex].text += line;
                 }
                 return updatedMessages;
               });
