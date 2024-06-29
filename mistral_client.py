@@ -48,6 +48,8 @@ class MistralAPIClient:
 
         for chunk in stream_response:
             response = chunk.choices[0].delta.content
+            print("DEBUG: ", response)
+
 
             if response is None:
                 yield {"data": json.dumps({"error": {}})}
@@ -55,4 +57,4 @@ class MistralAPIClient:
 
             yield {"data": response}
 
-        yield {"data": json.dumps({"done": True})}
+        yield {"data": ""}
