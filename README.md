@@ -1,5 +1,4 @@
 # LoRA2Vec
----
 
 In the world of LLM applications, there is a growing need for efficient methods to select the best domain-specific model based on a given user query. LoRA2Vec addresses this challenge by creating a robust vector representation of LoRA adapters, enabling dynamic selection during inference.
 
