@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
 .main {
   display: flex;
   flex-direction: column;
@@ -227,4 +229,114 @@
   to {
     transform: rotate(0deg);
   }
+}
+
+
+
+@keyframes gradientBackground {
+  0%, 100% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  25%, 75% {
+      background-position: 50% 100%;
+  }
+}
+
+
+
+
+
+.chatbot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers horizontally */
+  justify-content: flex-end; /* Aligns everything to the bottom */
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.messagesList {
+  display: flex;
+  flex-direction: column;
+  width: 80%; /* Match the width of the inputForm */
+  flex: 1; /* Takes remaining space */
+  overflow-y: auto; /* Allows scrolling */
+  margin: auto; /* Centers horizontally */
+  margin-bottom: 20px; /* Space between messages and form */
+  padding: 10px 0; /* Padding for aesthetic spacing */
+}
+
+.inputForm {
+  display: flex;
+  width: 80%; /* Or 100% depending on desired width */
+  justify-content: center; /* Centers the children horizontally within the form */
+  align-items: center; /* Optional if you need vertical alignment of internal elements */
+  margin: auto; /* This is key to centering the form horizontally */
+}
+
+.message {
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.messageUser {
+  margin: 5px 5px;
+  padding: 10px;
+  border-radius: 10px;
+  /* background-color: #DCDCDC; */
+  text-align: right;
+}
+
+.messageBot {
+  margin: 5px 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  /* background-color: #DCDCDC; */
+  text-align: left;
+}
+
+.raleway-style {
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400; /* Example: 400 for normal weight, 700 for bold, etc. */
+  font-style: normal;
+}
+
+.textInput {
+  flex-grow: 1; /* Allows the input to expand to fill available space */
+  margin-right: 10px; /* Space between the input and the button */
+  padding: 10px;
+  height: 8vh;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: large;
+}
+
+.sendButton {
+  padding: 10px 20px;
+  border: none;
+  color: white;
+  height: 8vh;
+  width: 10vh;
+  font-size: large;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.inputForm {
+  display: flex;
+}
+
+.loraLogo {
+  width: 15vw;
+  height: 15vh;
+  margin-bottom: 20px;
 }

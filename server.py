@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from sse_starlette import EventSourceResponse
 
 from mistral_client import MistralAPIClient
+from models import Label
 from retrieval_service import RetrievalService
 
 _EMBEDDINGS_DIR = "50_centroids"
@@ -23,14 +24,25 @@ retrieval_service = RetrievalService(embeddings_dir=_EMBEDDINGS_DIR)
 mistral_client = MistralAPIClient()
 
 
-class MistralRequest(BaseModel):
+class MistralClassifyRequest(BaseModel):
     query: str
 
 
-@app.post("/generate")
-def generate(request: MistralRequest):
+class MistralGenerateRequest(BaseModel):
+    label: Label
+    query: str
+
+
+@app.post("/classify")
+def classify(request: MistralClassifyRequest):
     query = request.query
     label = retrieval_service.retrieve_top_k_embeddings(query)
-    print(f"Query: {query}, Label: {label.value}")
+    return {"label": label.value}
+
+
+@app.post("/generate")
+def generate(request: MistralGenerateRequest):
+    label = request.label
+    query = request.query
     event_stream = mistral_client.chat(query, label)
     return EventSourceResponse(event_stream, ping=600)
