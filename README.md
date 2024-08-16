@@ -2,6 +2,8 @@
 
 In the world of LLM applications, there is a growing need for efficient methods to select the best domain-specific model based on a given user query. LoRA2Vec addresses this challenge by creating a robust vector representation of LoRA adapters, enabling dynamic selection during inference.
 
+[Video](https://drive.google.com/file/d/1_ezLCqZLoYmUbmmqW0WhmunvuN9FuuG5/view?usp=sharing)
+
 ### Key Features:
 
 ***Dataset and Fine-Tuning:*** We curated a dataset of 80,000 question-answer pairs from various domain-specific sources ([chemistry](https://huggingface.co/datasets/camel-ai/chemistry), [physics](https://huggingface.co/datasets/camel-ai/physics
